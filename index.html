@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Collection</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    
+    
+    
+    <div class="filters">
+        <label for="filter-year">Year:</label>
+        <input type="text" id="filter-year" onkeydown="handleFilterKeydown(event)">
+        <label for="filter-author">Author:</label>
+        <input type="text" id="filter-author" onkeydown="handleFilterKeydown(event)">
+        <label for="filter-language">Language:</label>
+        <input type="text" id="filter-language" onkeydown="handleFilterKeydown(event)">
+        <label for="filter-publisher">Publisher:</label>
+        <input type="text" id="filter-publisher" onkeydown="handleFilterKeydown(event)">
+        <label for="filter-subject">Subject:</label>
+        <input type="text" id="filter-subject" onkeydown="handleFilterKeydown(event)">
+        <!-- Removed the filter button -->
+    </div>
+    <div id="books"></div>
+
+    <script src="/script.js"></script>
+    <script>
+        function handleFilterKeydown(event) {
+            if (event.key === "Enter") {
+                filterBooks();
+            }
+        }
+    </script>
+    <footer class="footer">
+        <p class="footer-text">&copy; 2013-2024 ಕನ್ನಡ ಸಂಚಯ | ಸಾಹಿತ್ಯ ಸಂಶೋಧನೆ ಹಾಗೂ ಅಧ್ಯಯನ ವೇದಿಕೆ</p>
+    </footer>
+    
+    
+</body>
+</html>
