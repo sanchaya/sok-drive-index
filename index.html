@@ -1,41 +1,1162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Book Collection</title>
-    <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-    
-    
-    
-    <div class="filters">
-        <label for="filter-year">Year:</label>
-        <input type="text" id="filter-year" onkeydown="handleFilterKeydown(event)">
-        <label for="filter-author">Author:</label>
-        <input type="text" id="filter-author" onkeydown="handleFilterKeydown(event)">
-        <label for="filter-language">Language:</label>
-        <input type="text" id="filter-language" onkeydown="handleFilterKeydown(event)">
-        <label for="filter-publisher">Publisher:</label>
-        <input type="text" id="filter-publisher" onkeydown="handleFilterKeydown(event)">
-        <label for="filter-subject">Subject:</label>
-        <input type="text" id="filter-subject" onkeydown="handleFilterKeydown(event)">
-        <!-- Removed the filter button -->
-    </div>
-    <div id="books"></div>
 
-    <script src="/script.js"></script>
-    <script>
-        function handleFilterKeydown(event) {
-            if (event.key === "Enter") {
-                filterBooks();
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Book Display</title>
+        <style>
+         html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
             }
+            body {
+                font-family: Arial, sans-serif;
+              
+            }
+            .header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background-color: #f8f8f8;
+                padding: 20px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+            .header img {
+                max-height: 100px;
+                margin-right: 20px;
+            }
+            .header-content {
+                flex-grow: 1;
+            }
+            .header-content p {
+                margin: 0;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+         
+                .container {
+                display: grid;
+                grid-template-columns: 20% 80%;
+                grid-template-rows: 100px;
+                gap: 20px;
+                padding: 20px;
+               flex: 1;
+               
+            }
+          
+            .filters {
+                grid-column: 1 / 2;
+                grid-row: 1;
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                margin-top: 10px;
+            }
+            .filters fieldset {
+                margin-bottom: 10px;
+            }
+
+            .filters fieldset div {
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+
+            .filters label {
+                display: block;
+                margin-bottom: 5px;
+                margin-top: 10px;
+            }
+            .filters input, .filters select {
+                width: 10%;
+                margin-bottom: 10px;
+            }
+            .filter-section {
+                margin-bottom: 20px;
+            }
+
+            .filter-section div {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+            }
+
+           
+
+            .filter-section input[type="checkbox"] {
+                margin-right: 10px;
+                width:15px;
+            }
+           
+            .search-bar {
+                grid-column: 2 / -1;
+                grid-row: 1;
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 20px; /* Adjust border-radius for curved edges */
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .search-bar input[type="text"] {
+                width: 50%;
+                padding: 8px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 20px; /* Match the parent's border-radius */
+            }
+
+            .search-bar input[type="text"]:focus {
+                outline: none;
+                border-color: #aaa;
+            }
+            .books-container {
+                grid-column: 2 / -1;
+                grid-row: 2;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                
+            }
+          
+            .book {
+                position: relative;
+                overflow: visible;
+                border: 1px solid #ddd;
+                margin-bottom: 10px;
+                padding: 0;
+                cursor: pointer;
+            }
+            .book:hover .details-tooltip {
+                display: flex;
+            }
+            .thumbnail {
+                position: relative;
+                overflow: hidden;
+            }
+            .thumbnail img {
+                max-width: 100%;
+                display: block;
+                transition: transform 0.2s;
+            }
+            .book-title {
+                text-align: center;
+                padding: 10px;
+                font-size: 16px;
+                background-color: #f0f0f0;
+            }
+            .details-tooltip {
+                position: absolute;
+                top: -90px; 
+                left: calc(-20% - 10px); 
+                transform: translateX(0%);
+                width: 300px; 
+                background-color: rgba(255, 255, 255, 0.95);
+                color: black;
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                opacity: 1;
+                padding: 20px;
+                box-sizing: border-box;
+                z-index: 9999; 
+                border: 1px solid #ddd;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            .details {
+                text-align: left;
+            }
+            .details h3 {
+                margin: 0;
+            }
+            .details p {
+                margin: 5px 0;
+            }
+            .clear {
+                clear: both;
+            }
+              #search-books{
+                margin-top: 20px;
+            }
+            .footer {
+                
+                grid-column: 1 / -1;
+                background-color: #bfbdbddb;
+                text-align: center;
+                padding: 5px;
+                border-radius: 5px;
+                margin-top: 20px;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+             .show-more {
+            cursor: pointer;
+            color: blue;
+         
         }
-    </script>
-    <footer class="footer">
-        <p class="footer-text">&copy; 2013-2024 ಕನ್ನಡ ಸಂಚಯ | ಸಾಹಿತ್ಯ ಸಂಶೋಧನೆ ಹಾಗೂ ಅಧ್ಯಯನ ವೇದಿಕೆ</p>
-    </footer>
+         #clear-filters-button {
+            margin-bottom: 50px; 
+        }
+        </style>
+    </head>
+    <body>
+   
+     <div class="header">
+            <img src="public/servantsofknowledge.png" alt="Servants of knowledge">
+            <div class="header-content">
+                <p><strong>Servants Of Knowledge</strong></p>
+                <p>This library of books, audio, video, and other materials from and about India is curated and maintained by Public Resource. The purpose of this library is to assist the students and the lifelong learners of India in their pursuit of an education so that they may better their status and their opportunities and to secure for themselves and for others justice, social, economic and political.</p>
+                <br>
+                <p>This library has been posted for non-commercial purposes only and facilitates fair dealing usage of academic and research materials for private use including research, for criticism and review of the work or of other works and reproduction by teachers and students in the course of instruction. Many of the books and articles are either unavailable or inaccessible in libraries in India, especially in some of the poorer states and this collection seeks to fill a major gap that exists in access to knowledge.</p>
+                <p>Jai Gyan!</p>
+            </div>
+        </div>
+         <div class="container">
+            <div class="filters">
+    <h2>Filters</h2>
+
+ 
+    <div class="filter-section" id="filter-section-year">
+        <h3>Year</h3>
+        
+        <button class="show-more" onclick="toggleYearFilters()">Show More</button>
+        
+    </div>
+
+    <div class="filter-section" id="filter-section-author">
+        <h3>Author</h3>
+       
+     
+        <button class="show-more" onclick="toggleAuthorFilters()">Show More</button>
+    </div>
+
+    <div class="filter-section" id="filter-section-lang">
+        <h3>Language</h3>
+       
+        
+        <button class="show-more" onclick="toggleLanguageFilters()">Show More</button>
+    </div>
+
+    <div class="filter-section" id="filter-section-sub">
+        <h3>Subject</h3>
+       
+       
+        <button class="show-more" onclick="toggleSubjectFilters()">Show More</button>
+    </div>
+
+    <div class="filter-section" id="filter-section-publisher">
+        <h3>Publisher</h3>
+       
+      
+        <button class="show-more" onclick="togglePublisherFilters()">Show More</button>
+    </div>
+
+    <button id="clear-filters-button" onclick="clearFilters()">Clear Filters</button>
+</div>
+
+
+            <div class="search-bar">
+            <input type="text" id="search-books" placeholder="Search..." >
+            </div>
+
+            <div class="books-container" id="books"></div>
+            <div class="footer">
+                Servants Of Knowledge Collection
+            </div>
+        </div>
+
+        <script>
+              
+                    const booksData = [
+    {
+        "identifier": "aparanji-1986-08",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 08-1986",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "1986",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-1986-08\\aparanji-1986-08.pdf",
+        "thumbnail_url": "books\\aparanji-1986-08\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-1991-04",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 04-1991",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "1991",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-1991-04\\aparanji-1991-04.pdf",
+        "thumbnail_url": "books\\aparanji-1991-04\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-1992-11",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 11-1992",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "1992",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-1992-11\\aparanji-1992-11.pdf",
+        "thumbnail_url": "books\\aparanji-1992-11\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-1995-08",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 08-1995",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "1995",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-1995-08\\aparanji-1995-08.pdf",
+        "thumbnail_url": "books\\aparanji-1995-08\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-1997-01",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 01-1997",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "1997",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-1997-01\\aparanji-1997-01.pdf",
+        "thumbnail_url": "books\\aparanji-1997-01\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-1998-01",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 01-1998",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "1998",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-1998-01\\aparanji-1998-01.pdf",
+        "thumbnail_url": "books\\aparanji-1998-01\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-2002-11",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 11-2002",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "2002",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-2002-11\\aparanji-2002-11.pdf",
+        "thumbnail_url": "books\\aparanji-2002-11\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-2003-08",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 08-2003",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "2003",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-2003-08\\aparanji-2003-08.pdf",
+        "thumbnail_url": "books\\aparanji-2003-08\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "aparanji-2004-08",
+        "title": "ಅಪರಂಜಿ ಸಂಚಿಕೆ 08-2004",
+        "creators": [
+            "ಶ್ರೀ ಆ. ರಾ. ಸೇ. ",
+            "ಶ್ರೀ ಶೇಷಗಿರಿ",
+            "ಶಿವಕುಮಾರ್"
+        ],
+        "year": "2004",
+        "language": "kan",
+        "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
+        "pdf_url": "books\\aparanji-2004-08\\aparanji-2004-08.pdf",
+        "thumbnail_url": "books\\aparanji-2004-08\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "baga-bagichara-soudagara-1976",
+        "title": "ବାଗ ବଗିଚାର ସୌଦାଗର",
+        "creators": [
+            "ଶାନ୍ତନୁ କୁମାର ଆଚାର୍ଯ୍ୟ",
+            "Santanu Kumara Acharya",
+            "Shantanu Kumara Acharya"
+        ],
+        "year": "1976",
+        "language": "ori",
+        "subject": "ଗଳ୍ପ",
+        "publisher": "N/A",
+        "pdf_url": "books\\baga-bagichara-soudagara-1976\\baga-bagichara-soudagara-1976.pdf",
+        "thumbnail_url": "books\\baga-bagichara-soudagara-1976\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bala-sikhya-1906",
+        "title": "ବାଳଶିକ୍ଷା",
+        "creators": [
+            "ଦୟାନିଧି ଦାସ",
+            "Dayanidhi Das",
+            "Dayanidhi Das"
+        ],
+        "year": "1906",
+        "language": "ori",
+        "subject": "ପାଠ୍ୟପୁସ୍ତକ",
+        "publisher": "N/A",
+        "pdf_url": "books\\bala-sikhya-1906\\bala-sikhya-1906.pdf",
+        "thumbnail_url": "books\\bala-sikhya-1906\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "basanta-baibhaba-2013",
+        "title": "ବସନ୍ତ ବୈଭବ",
+        "creators": [
+            "ସରଳା ବେହେରା",
+            "ସରଳା ବେହେରା",
+            "ସରଳା ବେହେରା",
+            "ସରଳା ବେହେରା"
+        ],
+        "year": "2013",
+        "language": "Oriya",
+        "subject": "Souvenir; Children’s literature; Satire; Accomplishment; Compilation;ସ୍ମରଣିକା; ଶିଶୁସାହିତ୍ୟ; ରମ୍ୟରଚନା; କୃତିତ୍ୱ; ସଙ୍କଳନ",
+        "publisher": "N/A",
+        "pdf_url": "books\\basanta-baibhaba-2013\\basanta-baibhaba-2013.pdf",
+        "thumbnail_url": "books\\basanta-baibhaba-2013\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bedaginanadukoda0000sris",
+        "title": "ಬೆಡಗಿನ ನಾಡು ಕೊಡಗು ೮೩",
+        "creators": [
+            "ಶ್ರೀ ಶ್ರೀಪತಿರಾವ್ ಪಲಿಮಾರ್ಕಾರ್"
+        ],
+        "year": "1956",
+        "language": "kan",
+        "subject": "ಒಂದಾಣೆ ಮಾಲೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "ಒಂದಾಣೆ ಮಾಲೆ, ಮಂಗಳೂರು",
+        "pdf_url": "books\\bedaginanadukoda0000sris\\bedaginanadukoda0000sris.pdf",
+        "thumbnail_url": "books\\bedaginanadukoda0000sris\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bhabeshchandrasa0000jaya",
+        "title": "Bhabesh Chandra Sanyal",
+        "creators": [
+            "Jaya Appasamy"
+        ],
+        "year": "1967",
+        "language": "eng",
+        "subject": "N/A",
+        "publisher": "Lalit Kala Akademi",
+        "pdf_url": "books\\bhabeshchandrasa0000jaya\\bhabeshchandrasa0000jaya.pdf",
+        "thumbnail_url": "books\\bhabeshchandrasa0000jaya\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bhailibhonvddi0000prof",
+        "title": "Bhaili Bhonvddi",
+        "creators": [
+            "Prof.Dr.Olivinho Gomes"
+        ],
+        "year": "2007",
+        "language": "Kok",
+        "subject": "N/A",
+        "publisher": "Konkani Sorospot Prakashan",
+        "pdf_url": "books\\bhailibhonvddi0000prof\\bhailibhonvddi0000prof.pdf",
+        "thumbnail_url": "books\\bhailibhonvddi0000prof\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bharatheeyasamsk0000drts",
+        "title": "Bharatheeya Samskritige Karnatakada Koduge",
+        "creators": [
+            "Dr. T. S. Rajagopal"
+        ],
+        "year": "N/A",
+        "language": "kan",
+        "subject": "N/A",
+        "publisher": "The Directorate Of Kannada And Culture",
+        "pdf_url": "books\\bharatheeyasamsk0000drts\\bharatheeyasamsk0000drts.pdf",
+        "thumbnail_url": "books\\bharatheeyasamsk0000drts\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bharathiyamurthy0000bhsr",
+        "title": "ಭಾರತೀಯ ಮೂರ್ತಿ ಶಿಲ್ಪ",
+        "creators": [
+            "ಬಿ. ಎಚ್. ಶ್ರೀಧರ"
+        ],
+        "year": "1988",
+        "language": "kan",
+        "subject": "B. H. Shridhar Sanchaya;Kannada Literature;ಬಿ. ಎಚ್. ಶ್ರೀಧರ ಸಮಗ್ರ ಸಾಹಿತ್ಯ;ಬಿ. ಎಚ್. ಶ್ರೀಧರ ಸಂಚಯ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
+        "publisher": "Shirasiya Rangasanga Mathu Kallaranga",
+        "pdf_url": "books\\bharathiyamurthy0000bhsr\\bharathiyamurthy0000bhsr.pdf",
+        "thumbnail_url": "books\\bharathiyamurthy0000bhsr\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bhata-o-bilata-1979",
+        "title": "ଭାତ ଓ ବିଲାତ",
+        "creators": [
+            "ଉଦୟ ନାଥ ମିଶ୍ର",
+            "Udaya Natha Misra",
+            "Udaya Nath Mishra"
+        ],
+        "year": "1979",
+        "language": "ori",
+        "subject": "ଭ୍ରମଣ କାହାଣୀ",
+        "publisher": "N/A",
+        "pdf_url": "books\\bhata-o-bilata-1979\\bhata-o-bilata-1979.pdf",
+        "thumbnail_url": "books\\bhata-o-bilata-1979\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bigyan-diganta-2013-02",
+        "title": "ବିଜ୍ଞାନ ଦିଗନ୍ତ — ଫେବୃଆରୀ ୨୦୧୩ (୨୦ଶ ବର୍ଷ, ୨ୟ ସଂଖ୍ୟା)",
+        "creators": [],
+        "year": "2013",
+        "language": "ori",
+        "subject": "Odia",
+        "publisher": "N/A",
+        "pdf_url": "books\\bigyan-diganta-2013-02\\bigyan-diganta-2013-02.pdf",
+        "thumbnail_url": "books\\bigyan-diganta-2013-02\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bmshri.sankranthi0000srin.8k8.421.san",
+        "title": "ಸಂಕ್ರಾಂತಿ",
+        "creators": [
+            "ಶ್ರೀನಿವಾಸ್"
+        ],
+        "year": "1969",
+        "language": "kan",
+        "subject": "ಕನ್ನಡ ಸಾಹಿತ್ಯ; ಬಿ.ಎಂ.ಶ್ರೀ ಸಂಚಯ",
+        "publisher": "ಜೀವನ ಕರ್ಯಾಲಯ ಟ್ರಸ್ಟ್",
+        "pdf_url": "books\\bmshri.sankranthi0000srin.8k8.421.san\\bmshri.sankranthi0000srin.8k8.421.san.pdf",
+        "thumbnail_url": "books\\bmshri.sankranthi0000srin.8k8.421.san\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bmshri.shrishivarahasya0000hgansamputa-18",
+        "title": "Shri Shivarahasya Samputa-18",
+        "creators": [
+            "H. Gangadharashastri"
+        ],
+        "year": "N/A",
+        "language": "Kan",
+        "subject": "N/A",
+        "publisher": "Shri Panchacharya Electric Press",
+        "pdf_url": "books\\bmshri.shrishivarahasya0000hgansamputa-18\\bmshri.shrishivarahasya0000hgansamputa-18.pdf",
+        "thumbnail_url": "books\\bmshri.shrishivarahasya0000hgansamputa-18\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bmshri.srijagadguruthot0000sris_i6s3",
+        "title": "ಶ್ರೀ ಜಗದ್ಗುರು ಶೋಂಟಿದಾರ್ಯ ಸಂಸ್ಥಾನ ಮಠದ ಹಸ್ತಪ್ರತಿಸೂಚಿ ಸಂಪುಟ -1",
+        "creators": [
+            "ಶ್ರೀ ಎಸ್‌. ಶಿವಣ್ಣ"
+        ],
+        "year": "1985",
+        "language": "Kan",
+        "subject": "ಕನ್ನಡ ಸಾಹಿತ್ಯ; ಬಿ.ಎಂ.ಶ್ರೀ ಸಂಚಯ",
+        "publisher": "ವೀರಶೈವ ಅಧ್ಯಯನ ಸಂಸ್ಕೆ ",
+        "pdf_url": "books\\bmshri.srijagadguruthot0000sris_i6s3\\bmshri.srijagadguruthot0000sris_i6s3.pdf",
+        "thumbnail_url": "books\\bmshri.srijagadguruthot0000sris_i6s3\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bmshri.srimadhwarikatha0000srijsamputa-2",
+        "title": "Srimadhwarikathamritsara Samputa-2",
+        "creators": [
+            "Sri Jagannathdasaraya"
+        ],
+        "year": "N/A",
+        "language": "Kan",
+        "subject": "N/A",
+        "publisher": "Sri Harivittala Prakashana",
+        "pdf_url": "books\\bmshri.srimadhwarikatha0000srijsamputa-2\\bmshri.srimadhwarikatha0000srijsamputa-2.pdf",
+        "thumbnail_url": "books\\bmshri.srimadhwarikatha0000srijsamputa-2\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bmshri.srimadramayanavu0000pand",
+        "title": "Sri madra mayanavu sundara kaandavu",
+        "creators": [
+            "Panditha devashikhaamani "
+        ],
+        "year": "N/A",
+        "language": "Kan",
+        "subject": "N/A",
+        "publisher": "R Venkateshwara com",
+        "pdf_url": "books\\bmshri.srimadramayanavu0000pand\\bmshri.srimadramayanavu0000pand.pdf",
+        "thumbnail_url": "books\\bmshri.srimadramayanavu0000pand\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "bmshri.universityunionm0000unse",
+        "title": "The university union magazine mysore",
+        "creators": [],
+        "year": "N/A",
+        "language": "english",
+        "subject": "N/A",
+        "publisher": "modern review",
+        "pdf_url": "books\\bmshri.universityunionm0000unse\\bmshri.universityunionm0000unse.pdf",
+        "thumbnail_url": "books\\bmshri.universityunionm0000unse\\__ia_thumb.jpg"
+    },
+    {
+        "identifier": "infantnutrition0000pcje",
+        "title": "Infant Nutrition",
+        "creators": [
+            "P. C. Jeans"
+        ],
+        "year": "1947",
+        "language": "eng",
+        "subject": "CFTRI",
+        "publisher": "The C. V. Mosby Company",
+        "pdf_url": "books\\infantnutrition0000pcje\\infantnutrition0000pcje.pdf",
+        "thumbnail_url": "books\\infantnutrition0000pcje\\__ia_thumb.jpg"
+    }
+];
+
+                    function loadBooks() {
+                        const booksContainer = document.getElementById('books');
+                        booksContainer.innerHTML = '';  // Clear any previous book data
+                        booksData.forEach(book => {
+                            const bookDiv = document.createElement('div');
+                            bookDiv.className = 'book';
+
+                            const thumbnail = document.createElement('div');
+                            thumbnail.className = 'thumbnail';
+                            const img = document.createElement('img');
+                            img.src = book.thumbnail_url;
+                            thumbnail.appendChild(img);
+
+                            const title = document.createElement('div');
+                            title.className = 'book-title';
+                            title.textContent = book.title;
+                            thumbnail.appendChild(title);
+
+                            const detailsTooltip = document.createElement('div');
+                            detailsTooltip.className = 'details-tooltip';
+                            detailsTooltip.innerHTML = `
+                                <div class="details">
+                                    <h3>${book.title}</h3>
+                                    <p><strong>Author:</strong> ${book.creators.join(', ')}</p>
+                                    <p><strong>Publisher:</strong> ${book.publisher}</p>
+                                    <p><strong>Year:</strong> ${book.year}</p>
+                                    <p><strong>Language:</strong> ${book.language}</p>
+                                    <p><strong>Subject:</strong> ${book.subject}</p>
+                                    <a href="${book.pdf_url}" target="_blank">Download</a>
+                                </div>
+                            `;
+
+                            bookDiv.appendChild(detailsTooltip);
+                            bookDiv.appendChild(thumbnail);
+
+                            booksContainer.appendChild(bookDiv);
+                        
+                        });
+                    }
+          
+                  
+
+                loadBooks();
+            
+               function clearFilters() {
+                document.getElementById('search-books').value = '';
+                // Clear other filter inputs here
+                 document.querySelectorAll('.filters input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                loadBooks(); // Reload books after clearing filters
+            }
+                // Initialize filter checkboxes
+                    function initializeFilters() {
+                    
+                        const filterSectionYear = document.getElementById('filter-section-year');
+                        const uniqueYears = [...new Set(booksData.map(book => book.year).filter(year => year !=="N/A" ))];
+                        uniqueYears.sort((a,b) => b - a);
+                        uniqueYears.slice(0, Math.min(5, uniqueYears.length)).forEach(year => {
+                            const div = document.createElement('div');
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.value = year;
+                            input.className = 'filter-checkbox';
+                            input.id = `filter-year-${year}`;
+                            input.addEventListener('change', applyFilters);
+
+                            const label = document.createElement('label');
+                            label.htmlFor = `filter-year-${year}`;
+                            label.textContent = year;
+
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            filterSectionYear.insertBefore(div, filterSectionYear.querySelector('.show-more'));
+
+                            
+                        });
+
+                         
+                        const filterSectionAuthor = document.getElementById('filter-section-author');
+                            const uniqueAuthors = [...new Set(booksData.flatMap(book => {
+                                if (Array.isArray(book.creators)) {
+                                    return book.creators.map(author => author.trim());
+                                } else {
+                                    return [];
+                                }
+                            }))];
+                      
+                       uniqueAuthors.slice(0, Math.min(5,uniqueAuthors.length)).forEach(author => {
+                        const div = document.createElement('div');
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.value = author;
+                        input.className = 'filter-checkbox';
+                        input.id = `filter-author-${author}`;
+                        input.addEventListener('change', applyFilters);
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `filter-author-${author}`;
+                        label.textContent = author;
+
+                        div.appendChild(input);
+                        div.appendChild(label);
+                            filterSectionAuthor.insertBefore(div, filterSectionAuthor.querySelector('.show-more'));
+                            });
+
+                        const filterSectionLanguage = document.getElementById('filter-section-lang');
+                        const uniqueLanguages = [...new Set(booksData.map(book => book.language).filter(language => language !=="N/A"))];
+                       
+                        uniqueLanguages.slice(0, Math.min(5,uniqueLanguages.length)).forEach(language => {
+                            const div = document.createElement('div');
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.value = language;
+                            input.className = 'filter-checkbox';
+                            input.id = `filter-language-${language}`;
+                            input.addEventListener('change', applyFilters);
+
+                            const label = document.createElement('label');
+                            label.htmlFor = `filter-language-${language}`;
+                            label.textContent = language;
+
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            filterSectionLanguage.insertBefore(div, filterSectionLanguage.querySelector('.show-more'));
+                            });
+
+                         const filterSectionPublisher = document.getElementById('filter-section-publisher');
+                        const uniquePublishers = [...new Set(booksData.map(book => book.publisher).filter(publisher => publisher !== "N/A"))];
+                       
+                        uniquePublishers.slice(0, Math.min(5, uniquePublishers.length)).forEach(publisher => {
+                            const div = document.createElement('div');
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.value = publisher;
+                            input.className = 'filter-checkbox';
+                            input.id = `filter-publisher-${publisher}`;
+                            input.addEventListener('change', applyFilters);
+
+                            const label = document.createElement('label');
+                            label.htmlFor = `filter-publisher-${publisher}`;
+                            label.textContent = publisher;
+
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            filterSectionPublisher.insertBefore(div, filterSectionPublisher.querySelector('.show-more'));
+                            });
+
+                         const filterSectionSubject = document.getElementById('filter-section-sub');
+                       const uniqueSubjects = [...new Set(booksData.flatMap(book => {
+                            return book.subject.split(';').map(subject => subject.trim()).filter(subject => subject !== "N/A");
+                        }))];
+
+                        // Generate checkboxes for unique subjects, show all if less than 5
+                        uniqueSubjects.slice(0, Math.min(5, uniqueSubjects.length)).forEach(subject => {
+                            const div = document.createElement('div');
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.value = subject;
+                            input.className = 'filter-checkbox';
+                            input.id = `filter-subject-${subject}`;
+                            input.addEventListener('change', applyFilters);
+
+                            const label = document.createElement('label');
+                            label.htmlFor = `filter-subject-${subject}`;
+                            label.textContent = subject;
+
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            filterSectionSubject.insertBefore(div, filterSectionSubject.querySelector('.show-more'));
+                        });
+                    }
+
+                   
+
+                     let showAllYears = false;
+
+                    function toggleYearFilters() {
+                        const filterSectionYear = document.getElementById('filter-section-year');
+                        filterSectionYear.innerHTML = '<h3>Year</h3>';
+                        const uniqueYears = [...new Set(booksData.map(book => book.year).filter(year => year!=="N/A"))];
+                        uniqueYears.sort((a,b) => b - a);
+                        if (showAllYears) {
+                            uniqueYears.slice(0, Math.min(5,uniqueYears.length)).forEach(year => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = year;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-year-${year}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-year-${year}`;
+                                label.textContent = year;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionYear.insertBefore(div, filterSectionYear.querySelector('.show-more'));
+                            });
+                            filterSectionYear.appendChild(createToggleButton('Show More', toggleYearFilters));
+                        } else {
+                            uniqueYears.forEach(year => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = year;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-year-${year}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-year-${year}`;
+                                label.textContent = year;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionYear.insertBefore(div, filterSectionYear.querySelector('.show-more'));
+                            });
+                            filterSectionYear.appendChild(createToggleButton('Hide', toggleYearFilters));
+                        }
+                        showAllYears = !showAllYears;
+                    }
+
+                    let showAllAuthors = false;
+
+                    function toggleAuthorFilters() {
+                        const filterSectionAuthor = document.getElementById('filter-section-author');
+                        filterSectionAuthor.innerHTML = '<h3>Author</h3>';
+                        const uniqueAuthors = [...new Set(booksData.flatMap(book => {
+                            if (Array.isArray(book.creators)) {
+                                return book.creators.map(author => author.trim());
+                            } else {
+                                return [];
+                            }
+                        }))];
+                        
+                        if (showAllAuthors) {
+                            uniqueAuthors.slice(0, Math.min(5,uniqueAuthors.length)).forEach(author => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = author;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-author-${author}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-author-${author}`;
+                                label.textContent = author;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionAuthor.insertBefore(div, filterSectionAuthor.querySelector('.show-more'));
+                            });
+                            filterSectionAuthor.appendChild(createToggleButton('Show More', toggleAuthorFilters));
+                        }else {
+                            uniqueAuthors.forEach(author => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = author;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-author-${author}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-author-${author}`;
+                                label.textContent = author;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionAuthor.insertBefore(div, filterSectionAuthor.querySelector('.show-more'));
+                            });
+                            filterSectionAuthor.appendChild(createToggleButton('Hide', toggleAuthorFilters));
+                        }
+                        showAllAuthors = !showAllAuthors;
+                    }
+
+                    let showAllPublishers = false;
+
+                    function togglePublisherFilters() {
+                        const filterSectionPublisher = document.getElementById('filter-section-publisher');
+                        filterSectionPublisher.innerHTML = '<h3>Publisher</h3>';
+                        const uniquePublishers = [...new Set(booksData.map(book => book.publisher).filter(publisher => publisher !== "N/A"))];
+                        
+                        if (showAllPublishers) {
+                            uniquePublishers.slice(0, Math.min(5,uniquePublishers.length)).forEach(publisher => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = publisher;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-publisher-${publisher}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-publisher-${publisher}`;
+                                label.textContent = publisher;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionPublisher.appendChild(div);
+                            });
+                            filterSectionPublisher.appendChild(createToggleButton('Show More', togglePublisherFilters));
+                        } else {
+                            uniquePublishers.forEach(publisher => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = publisher;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-publisher-${publisher}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-publisher-${publisher}`;
+                                label.textContent = publisher;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionPublisher.appendChild(div);
+                            });
+                            filterSectionPublisher.appendChild(createToggleButton('Hide', togglePublisherFilters));
+                        }
+                        showAllPublishers = !showAllPublishers;
+                    }
+
+                    let showAllSubjects = false;
+
+                    function toggleSubjectFilters() {
+                        const filterSectionSubject = document.getElementById('filter-section-sub');
+                        filterSectionSubject.innerHTML = '<h3>Subject</h3>';
+                        const uniqueSubjects = [...new Set(booksData.flatMap(book => book.subject.split(';').map(subject => subject.trim())).filter(subject => subject !== "N/A"))];
+                        
+                        if (showAllSubjects) {
+                            uniqueSubjects.slice(0, Math.min(5, uniqueSubjects.length)).forEach(subject => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = subject;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-subject-${subject}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-subject-${subject}`;
+                                label.textContent = subject;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionSubject.appendChild(div);
+                            });
+                            filterSectionSubject.appendChild(createToggleButton('Show More', toggleSubjectFilters));
+                        } else {
+                            uniqueSubjects.forEach(subject => {
+                                const div = document.createElement('div');
+                                const input = document.createElement('input');
+                                input.type = 'checkbox';
+                                input.value = subject;
+                                input.className = 'filter-checkbox';
+                                input.id = `filter-subject-${subject}`;
+                                input.addEventListener('change', applyFilters);
+
+                                const label = document.createElement('label');
+                                label.htmlFor = `filter-subject-${subject}`;
+                                label.textContent = subject;
+
+                                div.appendChild(input);
+                                div.appendChild(label);
+                                filterSectionSubject.appendChild(div);
+                            });
+                            filterSectionSubject.appendChild(createToggleButton('Hide', toggleSubjectFilters));
+                        }
+                        showAllSubjects = !showAllSubjects;
+                    }
+
+                        let showAllLanguages = false;
+
+                        function toggleLanguageFilters() {
+                            const filterSectionLanguage = document.getElementById('filter-section-lang');
+                            filterSectionLanguage.innerHTML = '<h3>Language</h3>';
+                            const uniqueLanguages = [...new Set(booksData.map(book => book.language).filter(language => language !== "N/A"))];
+                            
+                            if (showAllLanguages) {
+                                uniqueLanguages.slice(0, Math.min(5, uniqueLanguages.length)).forEach(language => {
+                                    const div = document.createElement('div');
+                                    const input = document.createElement('input');
+                                    input.type = 'checkbox';
+                                    input.value = language;
+                                    input.className = 'filter-checkbox';
+                                    input.id = `filter-language-${language}`;
+                                    input.addEventListener('change', applyFilters);
+
+                                    const label = document.createElement('label');
+                                    label.htmlFor = `filter-language-${language}`;
+                                    label.textContent = language;
+
+                                    div.appendChild(input);
+                                    div.appendChild(label);
+                                    filterSectionLanguage.appendChild(div);
+                                });
+                                filterSectionLanguage.appendChild(createToggleButton('Show More', toggleLanguageFilters));
+                            }else {
+                                uniqueLanguages.forEach(language => {
+                                    const div = document.createElement('div');
+                                    const input = document.createElement('input');
+                                    input.type = 'checkbox';
+                                    input.value = language;
+                                    input.className = 'filter-checkbox';
+                                    input.id = `filter-language-${language}`;
+                                    input.addEventListener('change', applyFilters);
+
+                                    const label = document.createElement('label');
+                                    label.htmlFor = `filter-language-${language}`;
+                                    label.textContent = language;
+
+                                    div.appendChild(input);
+                                    div.appendChild(label);
+                                    filterSectionLanguage.appendChild(div);
+                                });
+                                filterSectionLanguage.appendChild(createToggleButton('Hide', toggleLanguageFilters));
+                            }
+                            showAllLanguages = !showAllLanguages;
+                        }
+
+
+                   function createToggleButton(text, toggleFunction) {
+                    const button = document.createElement('button');
+                    button.className = 'show-more';
+                    button.textContent = text;
+                    button.onclick = toggleFunction;
+                    return button;
+                }
+
+                  
+                   
+                    function applyFilters() {
+                    const searchInput = document.getElementById('search-books').value.toLowerCase();
+
+                    // Get all checked filters
+                    const checkedFilters = Array.from(document.querySelectorAll('.filter-checkbox:checked'));
+                    
+                    // Extract checked values for each filter type
+                    const checkedYears = Array.from(document.querySelectorAll('#filter-section-year .filter-checkbox:checked')).map(checkbox => checkbox.value);
+                    const checkedAuthors = Array.from(document.querySelectorAll('#filter-section-author .filter-checkbox:checked')).map(checkbox => checkbox.value);
+                    const checkedLanguages = Array.from(document.querySelectorAll('#filter-section-lang .filter-checkbox:checked')).map(checkbox => checkbox.value);
+                    const checkedPublishers = Array.from(document.querySelectorAll('#filter-section-publisher .filter-checkbox:checked')).map(checkbox => checkbox.value);
+                    const checkedSubjects = Array.from(document.querySelectorAll('#filter-section-sub .filter-checkbox:checked')).map(checkbox => checkbox.value);
+
+                    // Filter books based on search input and checked filters
+                    const filteredBooks = booksData.filter(book => {
+                        const matchesSearch = book.title.toLowerCase().includes(searchInput) ||
+                            book.creators.some(creator => creator.toLowerCase().includes(searchInput)) ||
+                            book.publisher.toLowerCase().includes(searchInput) ||
+                            book.language.toLowerCase().includes(searchInput) ||
+                            book.subject.toLowerCase().includes(searchInput);
+
+                        const matchesYear = checkedYears.length === 0 || checkedYears.includes(book.year);
+                        const matchesAuthor = checkedAuthors.length === 0 || book.creators.some(creator => checkedAuthors.includes(creator.trim()));
+                        const matchesLanguage = checkedLanguages.length === 0 || checkedLanguages.includes(book.language);
+                        const matchesPublisher = checkedPublishers.length === 0 || checkedPublishers.includes(book.publisher);
+                        const matchesSubject = checkedSubjects.length === 0 || checkedSubjects.some(subject => book.subject.split(';').map(s => s.trim()).includes(subject));
+
+                        return matchesSearch && matchesYear && matchesAuthor && matchesLanguage && matchesPublisher && matchesSubject;
+                    });
+
+                    // Update the books display
+                    const booksContainer = document.getElementById('books');
+                    booksContainer.innerHTML = '';
+                    filteredBooks.forEach(book => {
+                        const bookDiv = document.createElement('div');
+                        bookDiv.className = 'book';
+
+                        const thumbnail = document.createElement('div');
+                        thumbnail.className = 'thumbnail';
+                        const img = document.createElement('img');
+                        img.src = book.thumbnail_url;
+                        thumbnail.appendChild(img);
+
+                        const title = document.createElement('div');
+                        title.className = 'book-title';
+                        title.textContent = book.title;
+
+                        const detailsTooltip = document.createElement('div');
+                        detailsTooltip.className = 'details-tooltip';
+                        const details = document.createElement('div');
+                        details.className = 'details';
+                        details.innerHTML = `
+                            <h3>${book.title}</h3>
+                            <p><strong>Author:</strong> ${book.creators.join(', ')}</p>
+                            <p><strong>Publisher:</strong> ${book.publisher}</p>
+                            <p><strong>Language:</strong> ${book.language}</p>
+                            <p><strong>Year:</strong> ${book.year}</p>
+                            <p><strong>Subject:</strong> ${book.subject}</p>
+                            <a href="${book.pdf_url}" target="_blank">Read PDF</a>
+                        `;
+                        detailsTooltip.appendChild(details);
+
+                        bookDiv.appendChild(thumbnail);
+                        bookDiv.appendChild(title);
+                        bookDiv.appendChild(detailsTooltip);
+
+                        booksContainer.appendChild(bookDiv);
+                    });
+                }
+                
+                 document.addEventListener('DOMContentLoaded', () => {
+                    loadBooks();
+                    initializeFilters();
+                    document.getElementById('search-books').addEventListener('input', applyFilters);
+                });
+           
+
+            
+
+            
+        </script>
+    </body>
+    </html>
     
-    
-</body>
-</html>
