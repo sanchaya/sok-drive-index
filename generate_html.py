@@ -23,7 +23,7 @@ def generate_html_from_json(json_file, output_html):
             }}
             body {{
                 font-family: Arial, sans-serif;
-              
+                font-size: 16px;
             }}
             .header {{
                 display: flex;
@@ -60,11 +60,11 @@ def generate_html_from_json(json_file, output_html):
             .filters {{
                 grid-column: 1 / 2;
                 grid-row: 1;
-                background-color: #f0f0f0;
-                padding: 10px;
-                border-radius: 5px;
+                padding: 5px;
+                border-radius: 20px;
+                font-size: 16px;
                 margin-bottom: 20px;
-                margin-top: 10px;
+               
             }}
             .filters fieldset {{
                 margin-bottom: 10px;
@@ -87,6 +87,7 @@ def generate_html_from_json(json_file, output_html):
             }}
             .filter-section {{
                 margin-bottom: 20px;
+                margin-top: 10px;
             }}
 
             .filter-section div {{
@@ -105,8 +106,8 @@ def generate_html_from_json(json_file, output_html):
             .search-bar {{
                 grid-column: 2 / -1;
                 grid-row: 1;
-                background-color: #f0f0f0;
-                padding: 10px;
+             
+                padding: 5px;
                 border-radius: 20px; /* Adjust border-radius for curved edges */
                 text-align: center;
                 margin-bottom: 20px;
@@ -220,7 +221,8 @@ def generate_html_from_json(json_file, output_html):
      <div class="header">
             <img src="public/servantsofknowledge.png" alt="Servants of knowledge">
             <div class="header-content">
-                <p><strong>Servants Of Knowledge</strong></p>
+                <p><strong>#SERVANTSOFKNOWLEDGE Scanning Is The New Spinning</strong></p>
+                <br>
                 <p>This library of books, audio, video, and other materials from and about India is curated and maintained by Public Resource. The purpose of this library is to assist the students and the lifelong learners of India in their pursuit of an education so that they may better their status and their opportunities and to secure for themselves and for others justice, social, economic and political.</p>
                 <br>
                 <p>This library has been posted for non-commercial purposes only and facilitates fair dealing usage of academic and research materials for private use including research, for criticism and review of the work or of other works and reproduction by teachers and students in the course of instruction. Many of the books and articles are either unavailable or inaccessible in libraries in India, especially in some of the poorer states and this collection seeks to fill a major gap that exists in access to knowledge.</p>
@@ -229,7 +231,7 @@ def generate_html_from_json(json_file, output_html):
         </div>
          <div class="container">
             <div class="filters">
-    <h2>Filters</h2>
+    <h3>Filters</h3>
 
  
     <div class="filter-section" id="filter-section-year">
