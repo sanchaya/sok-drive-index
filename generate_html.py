@@ -131,7 +131,7 @@ def generate_html_from_json(json_file, output_html):
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
                 gap: 20px;
-                
+                margin-bottom:20px;
             }}
           
             .book {{
