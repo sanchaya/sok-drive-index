@@ -29,9 +29,9 @@ def generate_html_from_json(json_file, output_html):
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                background-color: #f8f8f8;
+                background-color: #ccd8d9;
                 padding: 20px;
-                border-bottom: 1px solid #ddd;
+                
                 text-align: left;
             }}
             .header img {{
@@ -129,7 +129,7 @@ def generate_html_from_json(json_file, output_html):
                 grid-column: 2 / -1;
                 grid-row: 2;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
                 gap: 20px;
                 
             }}
@@ -155,10 +155,10 @@ def generate_html_from_json(json_file, output_html):
                 transition: transform 0.2s;
             }}
             .book-title {{
-                text-align: center;
+                text-align: left;
                 padding: 10px;
                 font-size: 16px;
-                background-color: #f0f0f0;
+               
             }}
             .details-tooltip {{
                 position: absolute;
@@ -176,7 +176,7 @@ def generate_html_from_json(json_file, output_html):
                 padding: 20px;
                 box-sizing: border-box;
                 z-index: 9999; 
-                border: 1px solid #ddd;
+                border: 1px solid #090909;
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }}
             .details {{
@@ -197,7 +197,7 @@ def generate_html_from_json(json_file, output_html):
             .footer {{
                 
                 grid-column: 1 / -1;
-                background-color: #bfbdbddb;
+                background-color: #ccd8d9;
                 text-align: center;
                 padding: 5px;
                 border-radius: 5px;
@@ -214,6 +214,7 @@ def generate_html_from_json(json_file, output_html):
          #clear-filters-button {{
             margin-bottom: 50px; 
         }}
+        
         </style>
     </head>
     <body>
@@ -278,6 +279,7 @@ def generate_html_from_json(json_file, output_html):
             </div>
 
             <div class="books-container" id="books"></div>
+           
             <div class="footer">
                 Servants Of Knowledge Collection
             </div>
@@ -315,16 +317,16 @@ def generate_html_from_json(json_file, output_html):
                                     <p><strong>Year:</strong> ${{book.year}}</p>
                                     <p><strong>Language:</strong> ${{book.language}}</p>
                                     <p><strong>Subject:</strong> ${{book.subject}}</p>
-                                    <a href="${{book.pdf_url}}" target="_blank">Download</a>
+                                    <a href="${{book.pdf_url}}" target="_blank"> <img src="public/book.jpg" alt="Read Book" height='50' width='50'></a>
                                 </div>
                             `;
 
                             bookDiv.appendChild(detailsTooltip);
-                            bookDiv.appendChild(thumbnail);
-
+                            bookDiv.appendChild(thumbnail);  
                             booksContainer.appendChild(bookDiv);
                         
                         }});
+                      
                     }}
           
                   
@@ -782,7 +784,7 @@ def generate_html_from_json(json_file, output_html):
                             <p><strong>Language:</strong> ${{book.language}}</p>
                             <p><strong>Year:</strong> ${{book.year}}</p>
                             <p><strong>Subject:</strong> ${{book.subject}}</p>
-                            <a href="${{book.pdf_url}}" target="_blank">Read PDF</a>
+                            <a href="${{book.pdf_url}}" target="_blank"><img src="public/book.jpg" alt="Read Book" height='50' width='50'></a>
                         `;
                         detailsTooltip.appendChild(details);
 
