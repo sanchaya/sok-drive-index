@@ -13,6 +13,7 @@ def generate_html_from_json(json_file, output_html):
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Book Display</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <style>
          html, body {{
                 height: 100%;
@@ -214,6 +215,43 @@ def generate_html_from_json(json_file, output_html):
          #clear-filters-button {{
             margin-bottom: 50px; 
         }}
+         #iframeContainer {{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            z-index: 1000;
+        }}
+
+        #iframe {{
+            width: 80%;
+            height: 80%;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }}
+
+        #closeBtn {{
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            z-index: 1001;
+        }}
+    
+        @media (max-width: 600px) {{
+            #iframe {{
+                width: 95%;
+                height: 95%;
+            }}
+        }}
         
         </style>
     </head>
@@ -279,7 +317,10 @@ def generate_html_from_json(json_file, output_html):
             </div>
 
             <div class="books-container" id="books"></div>
-           
+           <div id="iframeContainer">
+                <iframe id="iframe" src="" frameborder="0"></iframe>
+                <span id="closeBtn">&times;</span>
+            </div>
             <div class="footer">
                 Servants Of Knowledge Collection
             </div>
@@ -291,6 +332,9 @@ def generate_html_from_json(json_file, output_html):
 
                     function loadBooks() {{
                         const booksContainer = document.getElementById('books');
+                        const iframeContainer = document.getElementById('iframeContainer');
+                        const iframe = document.getElementById('iframe');
+                        const closeBtn = document.getElementById('closeBtn');
                         booksContainer.innerHTML = '';  // Clear any previous book data
                         booksData.forEach(book => {{
                             const bookDiv = document.createElement('div');
@@ -317,16 +361,28 @@ def generate_html_from_json(json_file, output_html):
                                     <p><strong>Year:</strong> ${{book.year}}</p>
                                     <p><strong>Language:</strong> ${{book.language}}</p>
                                     <p><strong>Subject:</strong> ${{book.subject}}</p>
-                                    <a href="${{book.pdf_url}}" target="_blank"> <img src="public/book.jpg" alt="Read Book" height='50' width='50'></a>
+                                    <img src="public/book.jpg" alt="Read Book" height="50" width="50" class="read-icon">
                                 </div>
                             `;
 
                             bookDiv.appendChild(detailsTooltip);
                             bookDiv.appendChild(thumbnail);  
+                             // Add click event listener to the read icon
+                            detailsTooltip.querySelector('.read-icon').addEventListener('click', () => {{
+                                iframe.src = book.pdf_url;
+                                iframeContainer.style.display = 'flex';
+                                document.body.style.overflow = 'hidden';
+                            }});
+
                             booksContainer.appendChild(bookDiv);
                         
                         }});
-                      
+                      // Close the iframe
+                            closeBtn.addEventListener('click', () => {{
+                                iframe.src = '';  
+                                iframeContainer.style.display = 'none';
+                                document.body.style.overflow = 'auto';  // Enable scrolling
+                            }});
                     }}
           
                   
@@ -758,6 +814,9 @@ def generate_html_from_json(json_file, output_html):
 
                     // Update the books display
                     const booksContainer = document.getElementById('books');
+                     const iframeContainer = document.getElementById('iframeContainer');
+                    const iframe = document.getElementById('iframe');
+                    const closeBtn = document.getElementById('closeBtn');
                     booksContainer.innerHTML = '';
                     filteredBooks.forEach(book => {{
                         const bookDiv = document.createElement('div');
@@ -784,15 +843,24 @@ def generate_html_from_json(json_file, output_html):
                             <p><strong>Language:</strong> ${{book.language}}</p>
                             <p><strong>Year:</strong> ${{book.year}}</p>
                             <p><strong>Subject:</strong> ${{book.subject}}</p>
-                            <a href="${{book.pdf_url}}" target="_blank"><img src="public/book.jpg" alt="Read Book" height='50' width='50'></a>
+                            <img src="public/book.jpg" alt="Read Book" height="50" width="50" class="read-icon">
                         `;
                         detailsTooltip.appendChild(details);
 
                         bookDiv.appendChild(thumbnail);
                         bookDiv.appendChild(title);
                         bookDiv.appendChild(detailsTooltip);
-
+                        detailsTooltip.querySelector('.read-icon').addEventListener('click', () => {{
+                            iframe.src = book.pdf_url;
+                            iframeContainer.style.display = 'flex';
+                            document.body.style.overflow = 'hidden';  // Disable scrolling
+                        }});
                         booksContainer.appendChild(bookDiv);
+                    }});
+                    closeBtn.addEventListener('click', () => {{
+                        iframe.src = '';  // Clear the iframe source
+                        iframeContainer.style.display = 'none';
+                        document.body.style.overflow = 'auto';  // Enable scrolling
                     }});
                 }}
                 
