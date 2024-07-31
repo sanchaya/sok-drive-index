@@ -138,7 +138,6 @@ def generate_html_from_json(json_file, output_html):
             .book {{
                 position: relative;
                 overflow: visible;
-                border: 1px solid #ddd;
                 margin-bottom: 10px;
                 padding: 0;
                 cursor: pointer;
@@ -189,6 +188,11 @@ def generate_html_from_json(json_file, output_html):
             .details p {{
                 margin: 5px 0;
             }}
+            .details-tooltip .read-icon {{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }}
             .clear {{
                 clear: both;
             }}
@@ -368,7 +372,7 @@ def generate_html_from_json(json_file, output_html):
                             bookDiv.appendChild(detailsTooltip);
                             bookDiv.appendChild(thumbnail);  
                              // Add click event listener to the read icon
-                            detailsTooltip.querySelector('.read-icon').addEventListener('click', () => {{
+                            detailsTooltip.addEventListener('click', () => {{
                                 iframe.src = book.pdf_url;
                                 iframeContainer.style.display = 'flex';
                                 document.body.style.overflow = 'hidden';
@@ -850,7 +854,7 @@ def generate_html_from_json(json_file, output_html):
                         bookDiv.appendChild(thumbnail);
                         bookDiv.appendChild(title);
                         bookDiv.appendChild(detailsTooltip);
-                        detailsTooltip.querySelector('.read-icon').addEventListener('click', () => {{
+                        detailsTooltip.addEventListener('click', () => {{
                             iframe.src = book.pdf_url;
                             iframeContainer.style.display = 'flex';
                             document.body.style.overflow = 'hidden';  // Disable scrolling
