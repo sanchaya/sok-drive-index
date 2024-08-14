@@ -18,7 +18,7 @@ def generate_html_from_json(json_file, output_html):
          html, body {{
                 height: 100%;
                 margin: 0;
-                padding: 0;
+                padding: 10px 40px;
                 display: flex;
                 flex-direction: column;
             }}
@@ -51,20 +51,24 @@ def generate_html_from_json(json_file, output_html):
                 .container {{
                 display: grid;
                 grid-template-columns: 20% 80%;
+                
                 grid-template-rows: 100px;
                 gap: 20px;
-                padding: 20px;
+                padding: 20px ;
                flex: 1;
+               
                
             }}
           
             .filters {{
+                overflow-y: auto;
+                overflow: scroll;
                 grid-column: 1 / 2;
-                grid-row: 1;
                 padding: 5px;
                 border-radius: 20px;
                 font-size: 16px;
                 margin-bottom: 20px;
+                height: calc(100vh - 300px);
                
             }}
             .filters fieldset {{
@@ -83,7 +87,7 @@ def generate_html_from_json(json_file, output_html):
                 margin-top: 10px;
             }}
             .filters input, .filters select {{
-                width: 10%;
+                width: 90%;
                 margin-bottom: 10px;
             }}
             .filter-section {{
@@ -106,12 +110,10 @@ def generate_html_from_json(json_file, output_html):
            
             .search-bar {{
                 grid-column: 2 / -1;
-                grid-row: 1;
-             
                 padding: 5px;
-                border-radius: 20px; /* Adjust border-radius for curved edges */
+                border-radius: 20px; 
                 text-align: center;
-                margin-bottom: 20px;
+                 position: relative;
             }}
 
             .search-bar input[type="text"] {{
@@ -127,13 +129,26 @@ def generate_html_from_json(json_file, output_html):
                 border-color: #aaa;
             }}
             .books-container {{
-                grid-column: 2 / -1;
-                grid-row: 2;
+               grid-column: 2 / -1;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 10px;
                 margin-bottom:20px;
+                overflow-y: auto;
+                padding: 80px;
+               
+            height: calc(100vh - 400px);
             }}
+        .view-options {{
+            position: absolute;
+            right: 40px;
+            top: 30px;
+        }}
+        .view-options i {{
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }}
           
             .book {{
                 position: relative;
@@ -152,6 +167,9 @@ def generate_html_from_json(json_file, output_html):
             .thumbnail img {{
                 max-width: 100%;
                 display: block;
+                height: auto;
+                width: 120px; 
+                height: 180px;
                 transition: transform 0.2s;
             }}
             .book-title {{
@@ -193,6 +211,53 @@ def generate_html_from_json(json_file, output_html):
             right: 0;
             bottom: 0;
         }}
+        
+.list-view .books-container {{
+    display: block; 
+    padding: 0;
+    height: auto; 
+    width: 100%;
+    overflow: visible;
+}}
+
+.list-view .book {{
+    display: flex;
+    align-items: flex-start;
+    
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%; 
+}}
+
+.list-view .thumbnail {{
+    width: 120px; 
+    height: auto;
+    margin-right: 20px; 
+    flex-shrink: 0;
+}}
+
+.list-view .thumbnail img {{
+    width: 100%;
+    height: auto;
+    margin-right: 20px;
+}}
+.list-view .book-title {{
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}}
+
+.list-view .details {{
+    flex-grow: 1;
+    font-size: 16px;
+    text-align: left; 
+}}
+.list-view .details-tooltip {{
+    display: none;
+}}
             .clear {{
                 clear: both;
             }}
@@ -267,9 +332,7 @@ def generate_html_from_json(json_file, output_html):
                 <p><strong>#SERVANTSOFKNOWLEDGE Scanning Is The New Spinning</strong></p>
                 <br>
                 <p>This library of books, audio, video, and other materials from and about India is curated and maintained by Public Resource. The purpose of this library is to assist the students and the lifelong learners of India in their pursuit of an education so that they may better their status and their opportunities and to secure for themselves and for others justice, social, economic and political.</p>
-                <br>
-                <p>This library has been posted for non-commercial purposes only and facilitates fair dealing usage of academic and research materials for private use including research, for criticism and review of the work or of other works and reproduction by teachers and students in the course of instruction. Many of the books and articles are either unavailable or inaccessible in libraries in India, especially in some of the poorer states and this collection seeks to fill a major gap that exists in access to knowledge.</p>
-                <p>Jai Gyan!</p>
+                
             </div>
         </div>
          <div class="container">
@@ -318,6 +381,10 @@ def generate_html_from_json(json_file, output_html):
 
             <div class="search-bar">
             <input type="text" id="search-books" placeholder="Search..." >
+            <div class="view-options">
+                <i class="fas fa-th-large" id="grid-view-icon" onclick="setGridView()"></i>
+                <i class="fas fa-list" id="list-view-icon" onclick="setListView()"></i>
+            </div>
             </div>
 
             <div class="books-container" id="books"></div>
@@ -331,7 +398,19 @@ def generate_html_from_json(json_file, output_html):
         </div>
 
         <script>
-              
+              function setGridView() {{
+                document.querySelector('.books-container').classList.remove('list-view');
+                document.querySelector('.books-container').style.display = 'grid';
+            loadBooks(); 
+                console.log("Switched to grid view");
+        }}
+
+        function setListView() {{
+            document.querySelector('.books-container').classList.add('list-view');
+    document.querySelector('.books-container').style.display = 'block'; 
+    loadBooksInListView();
+                console.log("Switched to list view");
+        }}
                     const booksData = {books_json};
 
                     function loadBooks() {{
@@ -390,6 +469,57 @@ def generate_html_from_json(json_file, output_html):
                     }}
           
                   
+                function loadBooksInListView() {{
+                    const booksContainer = document.getElementById('books');
+                    booksContainer.innerHTML = '';  // Clear any previous book data
+                    booksData.forEach(book => {{
+        const bookDiv = document.createElement('div');
+        bookDiv.className = 'book list-view-item';  // Add class for list view
+
+        // Create clickable thumbnail
+        const thumbnail = document.createElement('div');
+        thumbnail.className = 'thumbnail';
+        const img = document.createElement('img');
+        img.src = book.thumbnail_url;
+        thumbnail.appendChild(img);
+
+        // Add event listener to open PDF in iframe on click
+        thumbnail.addEventListener('click', () => {{
+            iframe.src = book.pdf_url;
+            iframeContainer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }});
+
+        bookDiv.appendChild(thumbnail);
+
+        // Create book details for list view
+        const details = document.createElement('div');
+        details.className = 'details';
+        details.innerHTML = `
+            <h3>${{book.title}}</h3>
+            <p><strong>Author:</strong> ${{book.creators.join(', ')}}</p>
+            <p><strong>Publisher:</strong> ${{book.publisher}}</p>
+            <p><strong>Year:</strong> ${{book.year}}</p>
+            <p><strong>Language:</strong> ${{book.language}}</p>
+            <p><strong>Subject:</strong> ${{book.subject}}</p>
+        `;
+
+        bookDiv.appendChild(details);
+
+        booksContainer.appendChild(bookDiv);
+    }});
+
+
+                    // Close the iframe
+                    const closeBtn = document.getElementById('closeBtn');
+                    closeBtn.addEventListener('click', () => {{
+                        const iframe = document.getElementById('iframe');
+                        const iframeContainer = document.getElementById('iframeContainer');
+                        iframe.src = '';  
+                        iframeContainer.style.display = 'none';
+                        document.body.style.overflow = 'auto';  // Enable scrolling
+                    }});
+                }}
 
                 loadBooks();
             
@@ -399,7 +529,16 @@ def generate_html_from_json(json_file, output_html):
                  document.querySelectorAll('.filters input[type="checkbox"]').forEach(checkbox => {{
                     checkbox.checked = false;
                 }});
-                loadBooks(); // Reload books after clearing filters
+                const isListView = document.querySelector('.books-container').classList.contains('list-view');
+
+            if (isListView) {{
+               
+                loadBooksInListView();
+            }} else {{
+             
+                loadBooks();
+
+            }}
             }}
                 // Initialize filter checkboxes
                     function initializeFilters() {{
@@ -815,7 +954,18 @@ def generate_html_from_json(json_file, output_html):
 
                         return matchesSearch && matchesYear && matchesAuthor && matchesLanguage && matchesPublisher && matchesSubject;
                     }});
+                    const isListView = document.querySelector('.books-container').classList.contains('list-view');
 
+                    if (isListView) {{
+                        
+                            loadListView(filteredBooks);
+                    }} else {{
+                        console.log('gridview filter');
+                        loadGridView(filteredBooks);
+                
+                    }}
+                    }}
+                    function loadGridView(filteredBooks){{
                     // Update the books display
                     const booksContainer = document.getElementById('books');
                      const iframeContainer = document.getElementById('iframeContainer');
@@ -868,6 +1018,57 @@ def generate_html_from_json(json_file, output_html):
                     }});
                 }}
                 
+                function loadListView(filteredBooks){{
+                    const booksContainer = document.getElementById('books');
+                    booksContainer.innerHTML = '';  // Clear any previous book data
+                    filteredBooks.forEach(book => {{
+        const bookDiv = document.createElement('div');
+        bookDiv.className = 'book list-view-item';  // Add class for list view
+
+        // Create clickable thumbnail
+        const thumbnail = document.createElement('div');
+        thumbnail.className = 'thumbnail';
+        const img = document.createElement('img');
+        img.src = book.thumbnail_url;
+        thumbnail.appendChild(img);
+
+        // Add event listener to open PDF in iframe on click
+        thumbnail.addEventListener('click', () => {{
+            iframe.src = book.pdf_url;
+            iframeContainer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }});
+
+        bookDiv.appendChild(thumbnail);
+
+        // Create book details for list view
+        const details = document.createElement('div');
+        details.className = 'details';
+        details.innerHTML = `
+            <h3>${{book.title}}</h3>
+            <p><strong>Author:</strong> ${{book.creators.join(', ')}}</p>
+            <p><strong>Publisher:</strong> ${{book.publisher}}</p>
+            <p><strong>Year:</strong> ${{book.year}}</p>
+            <p><strong>Language:</strong> ${{book.language}}</p>
+            <p><strong>Subject:</strong> ${{book.subject}}</p>
+        `;
+
+        bookDiv.appendChild(details);
+
+        booksContainer.appendChild(bookDiv);
+    }});
+
+
+                    // Close the iframe
+                    const closeBtn = document.getElementById('closeBtn');
+                    closeBtn.addEventListener('click', () => {{
+                        const iframe = document.getElementById('iframe');
+                        const iframeContainer = document.getElementById('iframeContainer');
+                        iframe.src = '';  
+                        iframeContainer.style.display = 'none';
+                        document.body.style.overflow = 'auto';  // Enable scrolling
+                    }});
+                }}
                  document.addEventListener('DOMContentLoaded', () => {{
                     loadBooks();
                     initializeFilters();
