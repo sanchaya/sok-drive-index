@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json
 
 def generate_html_from_json(json_file, output_html):
@@ -18,7 +19,6 @@ def generate_html_from_json(json_file, output_html):
          html, body {{
                 height: 100%;
                 margin: 0;
-                padding: 10px 40px;
                 display: flex;
                 flex-direction: column;
             }}
@@ -26,13 +26,51 @@ def generate_html_from_json(json_file, output_html):
                 font-family: Arial, sans-serif;
                 font-size: 16px;
             }}
+              .head{{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 40px;
+                background-color: #070202e3;
+                color:#aaa;
+                border-bottom: 2px solid #ddd;
+            }}
+            .head :hover {{
+                color: #fff;
+            }}
+
+            .image-text {{
+                display: flex;
+                align-items: center;
+                margin-right: 20px; 
+            }}
+
+            .image-text img {{
+                width: 30px; 
+                height: 30px;
+                margin-right: 10px; 
+            }}
+
+            .nav-links {{
+                display: flex;
+                align-items: center;
+                margin-left: auto; 
+            }}
+
+            .nav-links a {{
+                margin-left: 20px; 
+                text-decoration: none;
+                color: #aaa;
+            }}
+
+            .nav-links a:hover {{
+                color: #fff;
+            }}
             .header {{
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                background-color: #ccd8d9;
-                padding: 20px;
-                
+                padding: 20px 80px;
                 text-align: left;
             }}
             .header img {{
@@ -51,10 +89,9 @@ def generate_html_from_json(json_file, output_html):
                 .container {{
                 display: grid;
                 grid-template-columns: 20% 80%;
-                
-                grid-template-rows: 100px;
-                gap: 20px;
-                padding: 20px ;
+                grid-template-rows: 40px;
+                gap: 10px;
+                padding: 10px 80px;
                flex: 1;
                
                
@@ -110,7 +147,6 @@ def generate_html_from_json(json_file, output_html):
            
             .search-bar {{
                 grid-column: 2 / -1;
-                padding: 5px;
                 border-radius: 20px; 
                 text-align: center;
                  position: relative;
@@ -141,7 +177,7 @@ def generate_html_from_json(json_file, output_html):
             }}
         .view-options {{
             position: absolute;
-            right: 40px;
+            right: 200px;
             top: 30px;
         }}
         .view-options i {{
@@ -267,10 +303,11 @@ def generate_html_from_json(json_file, output_html):
             .footer {{
                 
                 grid-column: 1 / -1;
-                background-color: #ccd8d9;
+                background-color: #070202e3;
                 text-align: center;
-                padding: 5px;
+                padding: 10px 5px;
                 border-radius: 5px;
+                color: #fff;
                 margin-top: 20px;
                 position: fixed;
                 bottom: 0;
@@ -278,7 +315,7 @@ def generate_html_from_json(json_file, output_html):
             }}
              .show-more {{
             cursor: pointer;
-            color: blue;
+            color: black;
          
         }}
          #clear-filters-button {{
@@ -317,15 +354,36 @@ def generate_html_from_json(json_file, output_html):
     
         @media (max-width: 600px) {{
             #iframe {{
-                width: 95%;
-                height: 95%;
+                width: 85%;
+                height: 85%;
             }}
         }}
         
         </style>
     </head>
     <body>
-   
+    <div class="head">
+            <div class="image-text">
+                <img src="public/servantsofknowledge.png" alt="servantsofknowledge">
+                <span>#SERVANTSOFKNOWLEDGE</span>
+            </div>
+            <div class="image-text">
+                <img src="public/readbook.jpg" alt="books">
+                <span>BOOKS</span>
+            </div>
+            <div class="image-text">
+                <img src="public/video.jpg" alt="video">
+                <span>VIDEO</span>
+            </div>
+            <div class="image-text">
+                <img src="public/audio.jpg" alt="audio">
+                <span>AUDIO</span>
+            </div>
+            <div class="nav-links">
+                <a href="#aboutus">About Us</a>
+                <a href="#contactus">Contact Us</a>
+            </div>
+        </div>
      <div class="header">
             <img src="public/servantsofknowledge.png" alt="Servants of knowledge">
             <div class="header-content">
@@ -343,7 +401,7 @@ def generate_html_from_json(json_file, output_html):
     <div class="filter-section" id="filter-section-year">
         <h3>Year</h3>
         
-        <button class="show-more" onclick="toggleYearFilters()">Show More</button>
+        <button class="show-more" onclick="toggleYearFilters()">Show more</button>
         
     </div>
 
@@ -351,28 +409,28 @@ def generate_html_from_json(json_file, output_html):
         <h3>Author</h3>
        
      
-        <button class="show-more" onclick="toggleAuthorFilters()">Show More</button>
+        <button class="show-more" onclick="toggleAuthorFilters()">Show more</button>
     </div>
 
     <div class="filter-section" id="filter-section-lang">
         <h3>Language</h3>
        
         
-        <button class="show-more" onclick="toggleLanguageFilters()">Show More</button>
+        <button class="show-more" onclick="toggleLanguageFilters()">Show more</button>
     </div>
 
     <div class="filter-section" id="filter-section-sub">
         <h3>Subject</h3>
        
        
-        <button class="show-more" onclick="toggleSubjectFilters()">Show More</button>
+        <button class="show-more" onclick="toggleSubjectFilters()">Show more</button>
     </div>
 
     <div class="filter-section" id="filter-section-publisher">
         <h3>Publisher</h3>
        
       
-        <button class="show-more" onclick="togglePublisherFilters()">Show More</button>
+        <button class="show-more" onclick="togglePublisherFilters()">Show more</button>
     </div>
 
     <button id="clear-filters-button" onclick="clearFilters()">Clear Filters</button>
@@ -392,11 +450,11 @@ def generate_html_from_json(json_file, output_html):
                 <iframe id="iframe" src="" frameborder="0"></iframe>
                 <span id="closeBtn">&times;</span>
             </div>
-            <div class="footer">
-                Servants Of Knowledge Collection
-            </div>
+           
         </div>
-
+             <div class="footer">
+                 #ServantsOfKnowledge - Scanning Is The New Spinning 
+            </div>
         <script>
               function setGridView() {{
                 document.querySelector('.books-container').classList.remove('list-view');
