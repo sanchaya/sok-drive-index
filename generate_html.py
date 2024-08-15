@@ -13,7 +13,8 @@ def generate_html_from_json(json_file, output_html):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Book Display</title>
+        <title>SERVANTS OF KNOWLEDGE</title>
+        <link rel="icon" href="public/servantsofknowledge-favicon.png" sizes="32x32" type="image/png">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <style>
          html, body {{
@@ -38,7 +39,17 @@ def generate_html_from_json(json_file, output_html):
             .head :hover {{
                 color: #fff;
             }}
-
+            .logo{{
+                display: flex;
+                align-items: center;
+                margin-right: 20px;
+                color: #fff;
+            }}
+            .logo img{{
+                width: 30px; 
+                height: 30px;
+                margin-right: 10px; 
+            }}
             .image-text {{
                 display: flex;
                 align-items: center;
@@ -49,6 +60,7 @@ def generate_html_from_json(json_file, output_html):
                 width: 30px; 
                 height: 30px;
                 margin-right: 10px; 
+                filter: invert(1) brightness(1);
             }}
 
             .nav-links {{
@@ -363,12 +375,12 @@ def generate_html_from_json(json_file, output_html):
     </head>
     <body>
     <div class="head">
-            <div class="image-text">
-                <img src="public/servantsofknowledge.png" alt="servantsofknowledge">
+            <div class="logo">
+                <img src="public/servants of knowledge.png" alt="servantsofknowledge">
                 <span>#SERVANTSOFKNOWLEDGE</span>
             </div>
             <div class="image-text">
-                <img src="public/readbook.jpg" alt="books">
+                <img src="public/book.jpg" alt="books">
                 <span>BOOKS</span>
             </div>
             <div class="image-text">
