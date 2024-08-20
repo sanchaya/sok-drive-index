@@ -54,14 +54,10 @@ def generate_html_from_json(json_file, output_html):
                 display: flex;
                 align-items: center;
                 margin-right: 20px; 
+                gap:5px;
             }}
 
-            .image-text img {{
-                width: 30px; 
-                height: 30px;
-                margin-right: 10px; 
-                filter: invert(1) brightness(1);
-            }}
+           
 
             .nav-links {{
                 display: flex;
@@ -78,6 +74,10 @@ def generate_html_from_json(json_file, output_html):
             .nav-links a:hover {{
                 color: #fff;
             }}
+                   .image-text svg {{
+        vertical-align: middle;
+    }}
+       
             .header {{
                 display: flex;
                 align-items: center;
@@ -162,6 +162,7 @@ def generate_html_from_json(json_file, output_html):
                 border-radius: 20px; 
                 text-align: center;
                  position: relative;
+                 
             }}
 
             .search-bar input[type="text"] {{
@@ -184,7 +185,7 @@ def generate_html_from_json(json_file, output_html):
                 margin-bottom:20px;
                 overflow-y: auto;
                 padding: 80px;
-               
+               margin-top: 20px;
             height: calc(100vh - 400px);
             }}
         .view-options {{
@@ -364,7 +365,83 @@ def generate_html_from_json(json_file, output_html):
             cursor: pointer;
             z-index: 1001;
         }}
-    
+        .fullscreen-modal {{
+            display: none; 
+            position: fixed;
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.8); 
+            overflow: hidden;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }}
+
+        .fullscreen-image {{
+            height: 100%; 
+            width: auto; 
+            flex: 1; 
+            object-fit: cover; 
+            
+        }}
+              
+        .modal {{
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5);
+            padding-top: 15px;
+        }}
+
+        /* Modal content box */
+        .modal-content {{
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            max-width: 600px; 
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+        }}
+        .justified-content {{
+            text-align: justify;
+            line-height: 1.5; 
+            white-space: pre-wrap; 
+            padding: 0 20px;
+        }}
+        .image-container {{
+            text-align: center; 
+            margin-bottom: 20px; 
+        }}
+
+        .gandhi-image {{
+            max-width: 100%; 
+            height: auto; 
+            display: inline-block; 
+        }}
+
+        /* Close button */
+        .close {{
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }}
+
+        .close:hover,
+        .close:focus {{
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }}
         @media (max-width: 600px) {{
             #iframe {{
                 width: 85%;
@@ -375,30 +452,74 @@ def generate_html_from_json(json_file, output_html):
         </style>
     </head>
     <body>
+    <div id="gandhiImageModal" class="fullscreen-modal">
+            <img src="public/gandhi.jpeg" alt="Gandhi" class="fullscreen-image">
+            <img src="public/gandhiknowledgetrust.jpeg" alt="Gandhi Knowledge Trust" class="fullscreen-image">
+        </div>
     <div class="head">
             <div class="logo">
                 <img src="public/servants of knowledge.png" alt="servantsofknowledge">
                 <span>#SERVANTSOFKNOWLEDGE</span>
             </div>
             <div class="image-text">
-                <img src="public/book.jpg" alt="books">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                    <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+                  </svg>
                 <span>BOOKS</span>
             </div>
             <div class="image-text">
-                <img src="public/video.jpg" alt="video">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z"/>
+                  </svg>
                 <span>VIDEO</span>
             </div>
             <div class="image-text">
-                <img src="public/audio.jpg" alt="audio">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-music" viewBox="0 0 16 16">
+                    <path d="M11 6.64a1 1 0 0 0-1.243-.97l-1 .25A1 1 0 0 0 8 6.89v4.306A2.6 2.6 0 0 0 7 11c-.5 0-.974.134-1.338.377-.36.24-.662.628-.662 1.123s.301.883.662 1.123c.364.243.839.377 1.338.377s.974-.134 1.338-.377c.36-.24.662-.628.662-1.123V8.89l2-.5z"/>
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                  </svg>
                 <span>AUDIO</span>
             </div>
             <div class="nav-links">
-                <a href="#aboutus">About Us</a>
-                <a href="#contactus">Contact Us</a>
+                <a href="#aboutus" id="openAboutUs">About Us</a>
+                <a href="#contactus" id="openGandhiTrust">Gandhi Library Knowledge Trust</a>
             </div>
         </div>
+        <!-- About Us Modal -->
+<div id="aboutUsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeAboutUs">&times;</span>
+        <h2>About Us</h2>
+        <div class="justified-content">
+            “All India GandhiLibrary to advance access to knowledge and spread the Mahatma’s message”
+
+            This digital repository is the result of a collaboration between Karnataka Gandhi Smaraka Nidhi and the Servants of Knowledge, a non-profit Section 8 association dedicated to advancing access to knowledge. The entire library was digitised in only 3 months and additional contributions were made by the Telangana Gandhi Smaraka Nidhi and the Andrapradesh Gandhi Smaraka Nidhi.
+
+            The library includes the volumes of Collected Works of Mahatma Gandhi as well as hundreds of other Gandhi resources including Harijan, Young India, Indian Opinion, many Navijavan Trust pamphlets, the Pyarlel biographies, the Desai diaries and much more. In addition, the repository includes extensive collections of the works of Nehru and Ambedkar, the Sardar Patel correspondence, and works by numerous others such as Netaji Subhas Chandra Bose and Sarvepalli Radhakrishnan. The multimedia collection also includes 129 audio files of Mahatma Gandhi speaking on All India Radio. The collection includes works in 12 languages.
+
+            Gandhi Bhavan already makes 1,272 public domain works available to the general public at <a href="https://archive.org/details/GandhiBhavan" target="_blank">https://archive.org/details/GandhiBhavan</a>. The presentation of the digital library to Gandhi organisations across the country allows those groups to access a much wider collection of works for noncommercial uses allowed by the Copyright Act of India, including access by the blind, research use, and uses in the course of instruction. In addition to the digital collection, the organisations are being furnished with an extensive treatise on the permitted uses of materials by public libraries.
+        </div>
+    </div>
+</div>
+
+<!-- Gandhi Trust Modal -->
+<div id="gandhiTrustModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeGandhiTrust">&times;</span>
+        <h2>Gandhi Library Knowledge Trust</h2>
+        <div class="image-container">
+            <img src="public/gandhi.jpeg" alt="Gandhi" class="gandhi-image">
+        </div>
+        <div class="justified-content">
+        NOTICE and ACKNOWLEDGEMENT of TRUSTEESHIP
+
+        By access and using the enclosed library of knowledge containing the full digitisation of the library of Gandhi Bhavan (Bengaluru), you do hereby agree and affirm that these materials shall ONLY be used for the noncommercial purposes of research, in the course of instruction, accessibility by the visually impaired and other uses AS PERMITTED UNDER THE LAWS OF INDIA. You must inform any other users of these materials of these conditions.
+        </div>
+        
+    </div>
+</div>
      <div class="header">
-            <img src="public/servantsofknowledge.png" alt="Servants of knowledge">
+            <img src="public/gandhi.jpeg" alt="Gandhi">
             <div class="header-content">
                 <p><strong>#SERVANTSOFKNOWLEDGE Scanning Is The New Spinning</strong></p>
                 <br>
@@ -1211,6 +1332,55 @@ function loadBooksInView(view) {{
                     }});
                 }}
                  document.addEventListener('DOMContentLoaded', () => {{
+                 
+                    const fullscreenModal = document.getElementById('gandhiImageModal');
+                        fullscreenModal.style.display = 'flex';
+
+                        // Close the full-screen image modal on click
+                        fullscreenModal.addEventListener('click', () => {{
+                            fullscreenModal.style.display = 'none';
+                        }});
+                                // Get modal elements
+                    const aboutUsModal = document.getElementById('aboutUsModal');
+                    const gandhiTrustModal = document.getElementById('gandhiTrustModal');
+
+                    // Get open modal buttons
+                    const openAboutUsBtn = document.getElementById('openAboutUs');
+                    const openGandhiTrustBtn = document.getElementById('openGandhiTrust');
+
+                    // Get close buttons
+                    const closeAboutUsBtn = document.getElementById('closeAboutUs');
+                    const closeGandhiTrustBtn = document.getElementById('closeGandhiTrust');
+
+                    // Open the About Us modal
+                    openAboutUsBtn.addEventListener('click', () => {{
+                        aboutUsModal.style.display = 'block';
+                    }});
+
+                    // Open the Gandhi Trust modal
+                    openGandhiTrustBtn.addEventListener('click', () => {{
+                        gandhiTrustModal.style.display = 'block';
+                    }});
+
+                    // Close the About Us modal
+                    closeAboutUsBtn.addEventListener('click', () => {{
+                        aboutUsModal.style.display = 'none';
+                    }});
+
+                    // Close the Gandhi Trust modal
+                    closeGandhiTrustBtn.addEventListener('click', () => {{
+                        gandhiTrustModal.style.display = 'none';
+                    }});
+
+                    // Close modals when clicking outside of them
+                    window.addEventListener('click', (event) => {{
+                        if (event.target === aboutUsModal) {{
+                            aboutUsModal.style.display = 'none';
+                        }}
+                        if (event.target === gandhiTrustModal) {{
+                            gandhiTrustModal.style.display = 'none';
+                        }}
+                    }});
                     loadBooksInView('grid');
                     initializeFilters();
                     document.getElementById('search-books').addEventListener('input', applyFilters);
