@@ -216,6 +216,7 @@
                 padding: 10px;
                 font-size: 16px;
                
+               
             }
             .details-tooltip {
                 position: absolute;
@@ -460,16 +461,20 @@
             </div>
         <script>
               function setGridView() {
+                console.log('setgrid');
                 document.querySelector('.books-container').classList.remove('list-view');
                 document.querySelector('.books-container').style.display = 'grid';
-            loadBooks(); 
+                booksLoaded=0;
+                loadBooksInView('grid'); 
                 console.log("Switched to grid view");
         }
 
         function setListView() {
+            console.log('setlist');
             document.querySelector('.books-container').classList.add('list-view');
     document.querySelector('.books-container').style.display = 'block'; 
-    loadBooksInListView();
+    booksLoaded=0;
+    loadBooksInView('list');
                 console.log("Switched to list view");
         }
                     const booksData = [
@@ -486,7 +491,7 @@
         "subject": "Magazine; Kannada Magazine; Aparanji Sanchaya; ಅಪರಂಜಿ ಸಂಚಯ;ಮಾಸಿಕ ಪತ್ರಿಕೆ; ಹಾಸ್ಯ ಪತ್ರಿಕೆ;ಕನ್ನಡ ಸಾಹಿತ್ಯ",
         "publisher": "ಅಪರಂಜಿ ಕಾರ್ಯಾಲಯ",
         "pdf_url": "books\\aparanji-1986-08\\aparanji-1986-08.pdf",
-        "thumbnail_url": "books\\aparanji-1986-08\\__ia_thumb.jpg"
+        "thumbnail_url": null
     },
     {
         "identifier": "aparanji-1991-04",
@@ -835,78 +840,89 @@
         "thumbnail_url": "books\\infantnutrition0000pcje\\__ia_thumb.jpg"
     }
 ];
+let booksLoaded = 0;
+const booksPerBatch = 25; // Number of books to load per batch
+const totalBooks = booksData.length;
 
-                    function loadBooks() {
-                        const booksContainer = document.getElementById('books');
-                        const iframeContainer = document.getElementById('iframeContainer');
-                        const iframe = document.getElementById('iframe');
-                        const closeBtn = document.getElementById('closeBtn');
-                        booksContainer.innerHTML = '';  // Clear any previous book data
-                        booksData.forEach(book => {
-                            const bookDiv = document.createElement('div');
-                            bookDiv.className = 'book';
-
-                            const thumbnail = document.createElement('div');
-                            thumbnail.className = 'thumbnail';
-                            const img = document.createElement('img');
-                            img.src = book.thumbnail_url;
-                            thumbnail.appendChild(img);
-
-                            const title = document.createElement('div');
-                            title.className = 'book-title';
-                            title.textContent = book.title;
-                            thumbnail.appendChild(title);
-
-                            const detailsTooltip = document.createElement('div');
-                            detailsTooltip.className = 'details-tooltip';
-                            detailsTooltip.innerHTML = `
-                                <div class="details">
-                                    <h3>${book.title}</h3>
-                                    <p><strong>Author:</strong> ${book.creators.join(', ')}</p>
-                                    <p><strong>Publisher:</strong> ${book.publisher}</p>
-                                    <p><strong>Year:</strong> ${book.year}</p>
-                                    <p><strong>Language:</strong> ${book.language}</p>
-                                    <p><strong>Subject:</strong> ${book.subject}</p>
-                                    <img src="public/book.jpg" alt="Read Book" height="50" width="50" class="read-icon">
-                                </div>
-                            `;
-
-                            bookDiv.appendChild(detailsTooltip);
-                            bookDiv.appendChild(thumbnail);  
-                             // Add click event listener to the read icon
-                            detailsTooltip.addEventListener('click', () => {
-                                iframe.src = book.pdf_url;
-                                iframeContainer.style.display = 'flex';
-                                document.body.style.overflow = 'hidden';
-                            });
-
-                            booksContainer.appendChild(bookDiv);
-                        
-                        });
-                      // Close the iframe
-                            closeBtn.addEventListener('click', () => {
-                                iframe.src = '';  
-                                iframeContainer.style.display = 'none';
-                                document.body.style.overflow = 'auto';  // Enable scrolling
-                            });
-                    }
-          
-                  
-                function loadBooksInListView() {
-                    const booksContainer = document.getElementById('books');
-                    booksContainer.innerHTML = '';  // Clear any previous book data
-                    booksData.forEach(book => {
+let count=0;
+function loadMoreBooks(view) {
+    console.log('loadmore');
+    
+    const booksContainer = document.getElementById('books');
+    const iframeContainer = document.getElementById('iframeContainer');
+    const iframe = document.getElementById('iframe');
+    const closeBtn = document.getElementById('closeBtn');
+    let start = booksLoaded;
+    let end = Math.min(booksLoaded + booksPerBatch, totalBooks);
+   
+    for (let i = start; i < end ; i++) {
+        const book = booksData[i];
         const bookDiv = document.createElement('div');
-        bookDiv.className = 'book list-view-item';  // Add class for list view
+        count++;
+        if (view === 'grid') {
+            bookDiv.className = 'book grid-view-item';  // Class for grid view
 
-        // Create clickable thumbnail
-        const thumbnail = document.createElement('div');
-        thumbnail.className = 'thumbnail';
-        const img = document.createElement('img');
-        img.src = book.thumbnail_url;
-        thumbnail.appendChild(img);
+            // Create thumbnail for grid view
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            const img = document.createElement('img');
+            if (book.thumbnail_url!=null) {
+            img.src = book.thumbnail_url;
+            thumbnail.appendChild(img);
+            }
+            const title = document.createElement('div');
+            title.className = 'book-title';
+            title.textContent = book.title;
+       
 
-        // Add event listener to open PDF in iframe on click
+            // Add tooltip for grid view
+          const detailsTooltip = document.createElement('div');
+                        detailsTooltip.className = 'details-tooltip';
+                        const details = document.createElement('div');
+                        details.className = 'details';
+                        details.innerHTML = `
+                            <h3>${book.title}</h3>
+                            <p><strong>Author:</strong> ${book.creators.join(', ')}</p>
+                            <p><strong>Publisher:</strong> ${book.publisher}</p>
+                            <p><strong>Language:</strong> ${book.language}</p>
+                            <p><strong>Year:</strong> ${book.year}</p>
+                            <p><strong>Subject:</strong> ${book.subject}</p>
+                            <img src="public/book.jpg" alt="Read Book" height="50" width="50" class="read-icon">
+                        `;
+                        detailsTooltip.appendChild(details);
+
+              bookDiv.appendChild(thumbnail);
+                        bookDiv.appendChild(title);
+                        bookDiv.appendChild(detailsTooltip);
+                        detailsTooltip.addEventListener('click', () => {
+                            iframe.src = book.pdf_url;
+                            iframeContainer.style.display = 'flex';
+                            document.body.style.overflow = 'hidden';  // Disable scrolling
+                        });
+       
+
+            }
+            else if (view === 'list') {
+            bookDiv.className = 'book list-view-item';  // Class for list view
+
+            // Create clickable thumbnail
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            const img = document.createElement('img');
+           if (book.thumbnail_url!=null) {
+            img.src = book.thumbnail_url;
+            thumbnail.appendChild(img);
+            }
+                const title = document.createElement('div');
+                title.className = 'book-title';
+                title.textContent = book.title;
+                thumbnail.appendChild(title);
+                    
+
+        
+
+        
+            // Add event listener to open PDF in iframe on click
         thumbnail.addEventListener('click', () => {
             iframe.src = book.pdf_url;
             iframeContainer.style.display = 'flex';
@@ -914,39 +930,89 @@
         });
 
         bookDiv.appendChild(thumbnail);
-
-        // Create book details for list view
-        const details = document.createElement('div');
-        details.className = 'details';
-        details.innerHTML = `
-            <h3>${book.title}</h3>
-            <p><strong>Author:</strong> ${book.creators.join(', ')}</p>
-            <p><strong>Publisher:</strong> ${book.publisher}</p>
-            <p><strong>Year:</strong> ${book.year}</p>
-            <p><strong>Language:</strong> ${book.language}</p>
-            <p><strong>Subject:</strong> ${book.subject}</p>
-        `;
-
-        bookDiv.appendChild(details);
+            // Create book details for list view
+            const details = document.createElement('div');
+            details.className = 'details';
+            details.innerHTML = `
+                <h3>${book.title}</h3>
+                <p><strong>Author:</strong> ${book.creators.join(', ')}</p>
+                <p><strong>Publisher:</strong> ${book.publisher}</p>
+                <p><strong>Year:</strong> ${book.year}</p>
+                <p><strong>Language:</strong> ${book.language}</p>
+                <p><strong>Subject:</strong> ${book.subject}</p>
+            `;
+           
+           
+           bookDiv.appendChild(details);
+                       
+                     
+        }
 
         booksContainer.appendChild(bookDiv);
-    });
-
-
-                    // Close the iframe
-                    const closeBtn = document.getElementById('closeBtn');
-                    closeBtn.addEventListener('click', () => {
-                        const iframe = document.getElementById('iframe');
-                        const iframeContainer = document.getElementById('iframeContainer');
-                        iframe.src = '';  
+       
+    }
+ closeBtn.addEventListener('click', () => {
+                        iframe.src = '';  // Clear the iframe source
                         iframeContainer.style.display = 'none';
                         document.body.style.overflow = 'auto';  // Enable scrolling
-                    });
-                }
+        });
+    booksLoaded += (end - start); // Increment booksLoaded by the number of books loaded
 
-                loadBooks();
+// If there are more books to load, create observer for the last book
+if (booksLoaded < totalBooks) {
+    
+    createObserver(view);
+}
+
+}
+
+function createObserver(view) {
+    console.log('obs');
+    const options = {
+        root: document.getElementById('books-container'),  // Use books container for scroll
+        rootMargin: '0px',
+        threshold: 1.0
+    };
+
+   const  observer = new IntersectionObserver((entries, observer) => {
+        console.log('intersect');
+        console.log(count);
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                observer.unobserve(entry.target);  // Stop observing the last book
+                loadMoreBooks(view);  // Load more books based on the view
+            }
+        });
+    }, options);
+    const lastBook = document.querySelector('.book:last-child');
+    if (lastBook) {
+        observer.observe(lastBook);  // Observe the last book in the container
+    }
+    
+}
+function observeLastBook() {
+    console.log('obslast');
+    if (observer) {
+        console.log('obsif');
+        const lastBook = document.querySelector('.book:last-child');
+        if (lastBook) {
+            console.log('last');
+            observer.observe(lastBook);
+        }
+    }
+}
+function loadBooksInView(view) {
+    console.log('main');
+    const booksContainer = document.getElementById('books');
+    booksContainer.innerHTML = '';
+    booksLoaded = 0;  // Reset loaded books count
+    loadMoreBooks(view);  // Start loading books based on the view
+    console.log(count);
+}
+                    
             
                function clearFilters() {
+                console.log('clear');
                 document.getElementById('search-books').value = '';
                 // Clear other filter inputs here
                  document.querySelectorAll('.filters input[type="checkbox"]').forEach(checkbox => {
@@ -955,11 +1021,11 @@
                 const isListView = document.querySelector('.books-container').classList.contains('list-view');
 
             if (isListView) {
-               
-                loadBooksInListView();
+                booksLoaded=0;
+                loadBooksInView('list');
             } else {
-             
-                loadBooks();
+                booksLoaded=0;
+                loadBooksInView('grid');
 
             }
             }
@@ -1379,7 +1445,7 @@
                     });
                     const isListView = document.querySelector('.books-container').classList.contains('list-view');
 
-                    if (isListView) {
+                   if (isListView) {
                         
                             loadListView(filteredBooks);
                     } else {
@@ -1388,6 +1454,7 @@
                 
                     }
                     }
+
                     function loadGridView(filteredBooks){
                     // Update the books display
                     const booksContainer = document.getElementById('books');
@@ -1402,8 +1469,11 @@
                         const thumbnail = document.createElement('div');
                         thumbnail.className = 'thumbnail';
                         const img = document.createElement('img');
-                        img.src = book.thumbnail_url;
-                        thumbnail.appendChild(img);
+                        
+                           if (book.thumbnail_url!=null) {
+                            img.src = book.thumbnail_url;
+                            thumbnail.appendChild(img);
+                        }
 
                         const title = document.createElement('div');
                         title.className = 'book-title';
@@ -1452,9 +1522,10 @@
         const thumbnail = document.createElement('div');
         thumbnail.className = 'thumbnail';
         const img = document.createElement('img');
-        img.src = book.thumbnail_url;
-        thumbnail.appendChild(img);
-
+        if (book.thumbnail_url!=null) {
+            img.src = book.thumbnail_url;
+            thumbnail.appendChild(img);
+        }
         // Add event listener to open PDF in iframe on click
         thumbnail.addEventListener('click', () => {
             iframe.src = book.pdf_url;
@@ -1493,7 +1564,7 @@
                     });
                 }
                  document.addEventListener('DOMContentLoaded', () => {
-                    loadBooks();
+                    loadBooksInView('grid');
                     initializeFilters();
                     document.getElementById('search-books').addEventListener('input', applyFilters);
                 });
