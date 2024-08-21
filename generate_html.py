@@ -411,6 +411,7 @@ def generate_html_from_json(json_file, output_html):
             width: 60%;
             max-width: 600px; 
             box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
         }}
         .justified-content {{
             text-align: justify;
@@ -492,13 +493,13 @@ def generate_html_from_json(json_file, output_html):
         <span class="close" id="closeAboutUs">&times;</span>
         <h2>About Us</h2>
         <div class="justified-content">
-            “All India GandhiLibrary to advance access to knowledge and spread the Mahatma’s message”
+“All India Gandhi Library to advance access to knowledge and spread the Mahatma’s message”
 
-            This digital repository is the result of a collaboration between Karnataka Gandhi Smaraka Nidhi and the Servants of Knowledge, a non-profit Section 8 association dedicated to advancing access to knowledge. The entire library was digitised in only 3 months and additional contributions were made by the Telangana Gandhi Smaraka Nidhi and the Andrapradesh Gandhi Smaraka Nidhi.
+This digital repository is the result of a collaboration between Karnataka Gandhi Smaraka Nidhi and the Servants of Knowledge, a non-profit Section 8 association dedicated to advancing access to knowledge. The entire library was digitised in only 3 months and additional contributions were made by the Telangana Gandhi Smaraka Nidhi and the Andrapradesh Gandhi Smaraka Nidhi.
 
-            The library includes the volumes of Collected Works of Mahatma Gandhi as well as hundreds of other Gandhi resources including Harijan, Young India, Indian Opinion, many Navijavan Trust pamphlets, the Pyarlel biographies, the Desai diaries and much more. In addition, the repository includes extensive collections of the works of Nehru and Ambedkar, the Sardar Patel correspondence, and works by numerous others such as Netaji Subhas Chandra Bose and Sarvepalli Radhakrishnan. The multimedia collection also includes 129 audio files of Mahatma Gandhi speaking on All India Radio. The collection includes works in 12 languages.
+The library includes the volumes of Collected Works of Mahatma Gandhi as well as hundreds of other Gandhi resources including Harijan, Young India, Indian Opinion, many Navijavan Trust pamphlets, the Pyarlel biographies, the Desai diaries and much more. In addition, the repository includes extensive collections of the works of Nehru and Ambedkar, the Sardar Patel correspondence, and works by numerous others such as Netaji Subhas Chandra Bose and Sarvepalli Radhakrishnan. The multimedia collection also includes 129 audio files of Mahatma Gandhi speaking on All India Radio. The collection includes works in 12 languages.
 
-            Gandhi Bhavan already makes 1,272 public domain works available to the general public at <a href="https://archive.org/details/GandhiBhavan" target="_blank">https://archive.org/details/GandhiBhavan</a>. The presentation of the digital library to Gandhi organisations across the country allows those groups to access a much wider collection of works for noncommercial uses allowed by the Copyright Act of India, including access by the blind, research use, and uses in the course of instruction. In addition to the digital collection, the organisations are being furnished with an extensive treatise on the permitted uses of materials by public libraries.
+Gandhi Bhavan already makes 1,272 public domain works available to the general public at <a href="https://archive.org/details/GandhiBhavan" target="_blank">https://archive.org/details/GandhiBhavan</a>. The presentation of the digital library to Gandhi organisations across the country allows those groups to access a much wider collection of works for noncommercial uses allowed by the Copyright Act of India, including access by the blind, research use, and uses in the course of instruction. In addition to the digital collection, the organisations are being furnished with an extensive treatise on the permitted uses of materials by public libraries.
         </div>
     </div>
 </div>
@@ -507,16 +508,21 @@ def generate_html_from_json(json_file, output_html):
 <div id="gandhiTrustModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeGandhiTrust">&times;</span>
-        <h2>Gandhi Library Knowledge Trust</h2>
+        <h2>GANDHI LIBRARY KNOWLEDGE TRUST</h2>
+        <p> (VERSION 1.1)</p>
         <div class="image-container">
             <img src="public/gandhi.jpeg" alt="Gandhi" class="gandhi-image">
         </div>
-        <div class="justified-content">
-        NOTICE and ACKNOWLEDGEMENT of TRUSTEESHIP
-
-        By access and using the enclosed library of knowledge containing the full digitisation of the library of Gandhi Bhavan (Bengaluru), you do hereby agree and affirm that these materials shall ONLY be used for the noncommercial purposes of research, in the course of instruction, accessibility by the visually impaired and other uses AS PERMITTED UNDER THE LAWS OF INDIA. You must inform any other users of these materials of these conditions.
+        <div> 
+            <p>NOTICE AND ACKNOWLEDGEMENT</p>
+            <p>OF TRUSTEESHIP</p>
         </div>
-        
+        <div class="justified-content">
+By access and using the enclosed library of knowledge containing the full digitisation of the library of Gandhi Bhavan (Bengaluru), you do hereby agree and affirm that these materials shall ONLY be used for the noncommercial purposes of research, in the course of instruction, accessibility by the visually impaired and other uses AS PERMITTED UNDER THE LAWS OF INDIA. You must inform any other users of these materials of these conditions.
+        </div>
+        <div>
+            <p><b>“SCANNING IS THE NEW SPINNING”</b></p><p><b>JAI GYAN</b></p>
+        </div>
     </div>
 </div>
      <div class="header">
@@ -524,7 +530,13 @@ def generate_html_from_json(json_file, output_html):
             <div class="header-content">
                 <p><strong>#SERVANTSOFKNOWLEDGE Scanning Is The New Spinning</strong></p>
                 <br>
-                <p>This library of books, audio, video, and other materials from and about India is curated and maintained by Public Resource. The purpose of this library is to assist the students and the lifelong learners of India in their pursuit of an education so that they may better their status and their opportunities and to secure for themselves and for others justice, social, economic and political.</p>
+                <p>All India Gandhi Library v1.0
+<br>
+The library includes the volumes of Collected Works of Mahatma Gandhi as well as hundreds of other Gandhi resources including Harijan, Young India, Indian Opinion, 
+many Nava jeevan Trust pamphlets, the Pyarelal biographies, the Desai diaries and much more.
+In addition, the repository includes extensive collections of the works of Nehru and Ambedkar, the Sardar Patel correspondence, and works by numerous others
+such as Netaji Subhas Chandra Bose and Sarvepalli Radhakrishnan. The multimedia collection also includes 129 audio files of Mahatma Gandhi speaking on All India Radio.
+The collection includes works in 12 languages.</p>
                 
             </div>
         </div>
@@ -1340,11 +1352,10 @@ function loadBooksInView(view) {{
                     const fullscreenModal = document.getElementById('gandhiImageModal');
                         fullscreenModal.style.display = 'flex';
 
-                        // Close the full-screen image modal on click
-                        fullscreenModal.addEventListener('click', () => {{
+                        document.addEventListener('click', () => {{
                             fullscreenModal.style.display = 'none';
                         }});
-                                // Get modal elements
+                              
                     const aboutUsModal = document.getElementById('aboutUsModal');
                     const gandhiTrustModal = document.getElementById('gandhiTrustModal');
 
