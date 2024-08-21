@@ -360,10 +360,11 @@
             display: none; 
             position: fixed;
             z-index: 2; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%; 
+            left: 50%; 
+            top: 50%; 
+            transform: translate(-50%, -50%);
+            width: 30%;
+            height: 30%; 
             background-color: rgba(0, 0, 0, 0.8); 
             overflow: hidden;
             display: flex; 
@@ -1034,10 +1035,13 @@ function loadMoreBooks(view) {
             img.src = book.thumbnail_url;
             thumbnail.appendChild(img);
             }
+            else{
                 const title = document.createElement('div');
                 title.className = 'book-title';
                 title.textContent = book.title;
                 thumbnail.appendChild(title);
+            }
+                
                     
 
         
